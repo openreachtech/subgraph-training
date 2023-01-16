@@ -77,3 +77,65 @@ Remix等を通じてコントラクトのapproveイベントを発生させる
   }
 }
 ```
+
+# サンプルプロジェクトの拡張
+サンプルプロジェクトを拡張して、BeginnerCoinコントラクトのTransferイベントをSubgraphでクエリできるようにします。
+
+### 1. 実装
+[schema.graphql](./subgraph/schema.graphql)にTokenエンティティを追加します。
+```typescript
+type Token @entity {
+  id: ID!
+  owner: Bytes!
+  name: String!
+  balance: BigInt!
+}
+```
+
+そして[contract.ts](./subgraph/src/contract.ts)の`handleTransfer`関数を実装します。
+```typescript
+export function handleTransfer(event: Transfer): void {
+  // Tokenをロードする
+  let token = Token.load(event.params.to.toHexString());
+  // 存在しない場合、新規で作る
+  if (!token) {
+    // Tokenのidとして"to"アドレスを使う
+    token = new Token(event.params.to.toHexString());
+    token.owner = event.params.to;
+    // BeginnerCoinを作る
+    let contract = Contract.bind(event.address);
+    // nameを取得してセット
+    token.name = contract.name();
+  }
+
+  // balance更新
+  token.balance = event.params.value;
+  // 保存
+  token.save();
+}
+```
+
+
+### 2. ビルド＆デプロイ
+```sh
+# subgraphの型を生成
+npm run codegen
+
+# ビルド
+npm run build
+
+# デプロイ
+npm run deploy-local
+```
+
+### 3. Queryの確認
+```javascript
+{
+  tokens(where:{
+    owner: "0x26fa9f1a6568b42e29b1787c403B3628dFC0C6FE"
+  }) {
+    name
+    amount
+  }
+}
+```
