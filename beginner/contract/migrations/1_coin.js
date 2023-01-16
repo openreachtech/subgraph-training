@@ -5,7 +5,8 @@ module.exports = async function (deployer, network, accounts) {
   
   console.log("start minting erc20...")
   const erc20 = await ERC20.at(ERC20.address);
-  for (let i = 0; i < accounts.length; i++) {
-    await erc20.mint(accounts[i], "100000000000000000000");
-  }
+  await erc20.mint(accounts[0], "100000000000000000000");
+  // for (let i = 0; i < accounts.length; i++) {
+  //   await erc20.mint(accounts[i], "100000000000000000000");
+  // }
 };
