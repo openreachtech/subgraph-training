@@ -1,0 +1,13 @@
+type ExampleEntity @entity {
+  id: Bytes!
+  count: BigInt!
+  owner: Bytes! # address
+  spender: Bytes! # address
+}
+
+type Token @entity {
+  id: ID!
+  owner: Bytes!
+  name: String!
+  balance: BigInt!
+}
