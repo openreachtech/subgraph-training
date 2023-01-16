@@ -135,7 +135,7 @@ npm run deploy-local
     owner: "0x26fa9f1a6568b42e29b1787c403B3628dFC0C6FE"
   }) {
     name
-    amount
+    balance
   }
 }
 ```
