@@ -74,7 +74,6 @@ Remix等を通じてコントラクトのapproveイベントを発生させる
     id
     spender
     count
-    amount
   }
 }
 ```
